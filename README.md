@@ -1,5 +1,5 @@
 # 📍Geocaching App
-&nbsp;
+
 ## Requirements and Implementation
 The Toronto Geocaching Club has hired you to develop an application that enables users to use
 their phone to participate in geocaching in the Toronto area.
@@ -38,3 +38,27 @@ item the person is searching for, latitude and longitude)
   - User can keep notes about a specific geocache site (example: I found it by the
 water fountain; I searched all the trees but didn’t see anything, etc)
   - User can take a photo of the geocache site (or the item they found)
+
+## Task Lists
+- [ ] 1. Display a List of Geocaching Sites @MohitSharma(101342267)
+  - [ ] Create geocaching sites list screen
+  - [ ] Fetch the current location of the user’s device
+  - [ ] Display a list of geocaching sites that are near the fetched location
+
+- [ ] 2. Display the Nearby Geocaching Sites on a Map @JavteshSinghBhullar(101348129)
+  - [ ] Create map screen
+  - [ ] Display the nearby geocaching sites on a map with pins
+
+- [ ] 3. Show Details About a Specific Geocaching Site @MohitSharma(101342267)
+  - [ ] Create geocaching site detail screen
+  - [ ] Display the name of the cache, description of the item the person is searching and latitude and longitude
+
+- [ ] 4. Ability to Mark a Specific Geocaching Site as a “favorite” @JavteshSinghBhullar(101348129)
+  - [ ] Implement marking a specific geocaching site as a “favorite”
+
+- [ ] 5. Record Keeping Features @MohitSharma(101342267)
+  - [ ] User can track which geocache sites they have “in progress” or “completed”
+  - [ ] User can keep notes about a specific geocache site
+
+- [ ] 6. Record Keeping Features @JavteshSinghBhullar(101348129)
+  - [ ] User can take a photo of the geocache site (or the item they found)
