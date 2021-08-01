@@ -41,24 +41,31 @@ water fountain; I searched all the trees but didn’t see anything, etc)
 
 ## Task Lists
 - [ ] 1. Display a List of Geocaching Sites @MohitSharma(101342267)
+  - [ ] Setup navigation stack
   - [ ] Create geocaching sites list screen
   - [ ] Fetch the current location of the user’s device
+  - [ ] Setup firebase console and implement firebase manager and geocoding components
   - [ ] Display a list of geocaching sites that are near the fetched location
 
-- [ ] 2. Display the Nearby Geocaching Sites on a Map @JavteshSinghBhullar(101348129)
-  - [ ] Create map screen
-  - [ ] Display the nearby geocaching sites on a map with pins
+- [ ] 2. Implement Sign-In and Sign-Up Screens @JavteshSinghBhullar(101348129)
+  - [ ] Create sign-in and sign-up screens
+  - [ ] Authenticate user with firestore
+  - [ ] Implement remember me with async storage
 
 - [ ] 3. Show Details About a Specific Geocaching Site @MohitSharma(101342267)
   - [ ] Create geocaching site detail screen
   - [ ] Display the name of the cache, description of the item the person is searching and latitude and longitude
 
-- [ ] 4. Ability to Mark a Specific Geocaching Site as a “favorite” @JavteshSinghBhullar(101348129)
-  - [ ] Implement marking a specific geocaching site as a “favorite”
+- [ ] 4. Implement Geocaching Site Creation Screen @JavteshSinghBhullar(101348129)
+  - [ ] Create geocaching site creation screen
+  - [ ] Input name of the cache, description of the item the person is searching and latitude and longitude
+  - [ ] Add geocaching site to firestore
 
 - [ ] 5. Record Keeping Features @MohitSharma(101342267)
+  - [ ] User can mark a specific geocaching site as a “favorite”
   - [ ] User can track which geocache sites they have “in progress” or “completed”
   - [ ] User can keep notes about a specific geocache site
 
-- [ ] 6. Record Keeping Features @JavteshSinghBhullar(101348129)
-  - [ ] User can take a photo of the geocache site (or the item they found)
+- [ ] 6. Display the Nearby Geocaching Sites on a Map @JavteshSinghBhullar(101348129)
+  - [ ] Create map screen
+  - [ ] Display the nearby geocaching sites on a map with pins
