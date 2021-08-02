@@ -52,9 +52,9 @@ water fountain; I searched all the trees but didn’t see anything, etc)
   - [ ] Authenticate user with firestore
   - [ ] Implement remember me with async storage
 
-- [ ] 3. Show Details About a Specific Geocaching Site @MohitSharma(101342267)
-  - [ ] Create geocaching site detail screen
-  - [ ] Display the name of the cache, description of the item the person is searching and latitude and longitude
+- [x] 3. Show Details About a Specific Geocaching Site @MohitSharma(101342267)
+  - [x] Create geocaching site detail screen
+  - [x] Display the name of the cache, description of the item the person is searching and latitude and longitude
 
 - [ ] 4. Implement Geocaching Site Creation Screen @JavteshSinghBhullar(101348129)
   - [ ] Create geocaching site creation screen
