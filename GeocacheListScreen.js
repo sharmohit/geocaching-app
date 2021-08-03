@@ -67,7 +67,7 @@ const GeocacheListScreen = ({ navigation, route }) => {
                                 onPress={() => {
                                     console.log(`${item.id} ${item.content.name} selected`)
                                     navigation.navigate("GeocacheDetailScreen", {
-                                        content: JSON.stringify(item.content),
+                                        data: JSON.stringify(item),
                                     })
                                 }}>
                                 <View style={AppStyles.filledContainer}>
