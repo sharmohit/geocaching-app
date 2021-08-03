@@ -1,7 +1,9 @@
 import React, { useState } from 'react'
 import { StatusBar } from 'expo-status-bar';
-import { View, TextInput, Button, Text, SafeAreaView, Switch, StyleSheet } from 'react-native'
+import { View, TextInput, Button, Text, SafeAreaView, Switch, StyleSheet, Alert } from 'react-native'
 import { db } from "./fireManager"
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 function signIn({ navigation, route }) {
 
@@ -11,21 +13,83 @@ function signIn({ navigation, route }) {
     const [isEnabled, setIsEnabled] = useState(false);
     const toggleSwitch = () => setIsEnabled(previousState => !previousState);
 
+
     const goToHome = () => {
 
         let userEmail = email
-        let userPassword = password 
-
-        console.log("The user email  is " + userEmail + " and  password is " + userPassword)
+        let userPassword = password
 
 
+        db.collection('Users')
+        .where('email','==',email)
+        .onSnapshot((querySnapshot) => {
 
-        console.log("Navigation to main")
-        navigation.navigate("main")
+            if (querySnapshot.size == 0) {
+                console.log("No email found")
+                createAlert("Invalid Email")
+            }
+
+            querySnapshot.forEach((doc) => {
+                console.log("------------ Email Found ------------")       
+
+                // console.log(doc.id, " => " , doc.data())
+                const passFromData = doc.data()
+
+                if ( passFromData.pass == password ) {
+                    console.log(" ********* Password Matched ***************")
+                    console.log("Navigation to main")
+                    navigation.navigate("main")
+                    rememberMe()
+                }
+                else {
+                    // createAlert("Invalid Password")
+                    console.log("Password NOT matched .... Access Denied")
+                }
+            })
+           
+        })
+
     }
+
+    const createAlert = (message) =>
+    Alert.alert(
+      "Alert",
+      message,
+      [
+        {
+          text: "OK",
+          onPress: () => console.log("OK Pressed"),
+          style: "cancel"
+        },
+        // { text: "OK", onPress: () => console.log("OK Pressed") }
+      ]
+    );
+    
     const goToSignup = () => {
         console.log("Navigation to SignUp Screen")
         navigation.navigate("signUp")
+    }
+
+    const rememberMe = () => {
+
+        if(isEnabled == true){
+
+            console.log("Remember ME Switch is ON ... Storing the values...")
+
+            AsyncStorage.setItem("Email",email)
+            .then(
+              () => {  
+                console.groupCollapsed("Save was successful")
+                console.log("value stored is : Email : " + email)
+              }
+            )
+            .catch(
+              (error) => {
+                console.log("Error occured when saving a primitive")
+                console.log("error")
+              }
+            )
+        }    
     }
 
 
@@ -51,7 +115,7 @@ function signIn({ navigation, route }) {
 
                         <TextInput
                             placeholder="password"
-                            returnKeyType="done" asdf
+                            returnKeyType="done"
                             textContentType="password"
                             autoCapitalize="none"
                             onChangeText={setPassword}

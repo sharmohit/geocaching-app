@@ -8,7 +8,6 @@ function signUp({ navigation, route }) {
     const [Uname, setName] = React.useState('')
     const [Uemail, setEmail] = React.useState('')
     const [Upassword, setPassword] = React.useState('')
-    const [Uphone, setPhone] = React.useState('')
 
 
     const goToHome = () => {
@@ -16,16 +15,14 @@ function signUp({ navigation, route }) {
         let userName = Uname
         let userEmail = Uemail
         let userPassword = Upassword
-        let userPhone = Uphone  
 
-        console.log("Value are " + userName + " " + userEmail + " " + userPassword + " " + userPhone + " ")
+        console.log("Value are " + userName + " " + userEmail  + " " + userPassword)
         console.log(".......................")
 
         const user = {
             name: userName,
             email: userEmail,
             pass : userPassword,
-            phone: Number(userPhone),
         }
         // 2. save it to Firestore
         db.collection("Users").add(user).then().catch()
@@ -34,8 +31,9 @@ function signUp({ navigation, route }) {
         console.log("Navigation to main")
         navigation.navigate("main")
     }
+
     const goToSignIn = () => {
-        console.log("Navigation to SignUp Screen")
+        console.log("Moving Back to SignIn Screen")
         navigation.navigate("signIn")
     }
 
@@ -76,18 +74,6 @@ function signUp({ navigation, route }) {
                 autoCapitalize="none"
                 onChangeText={setPassword}
                 value={Upassword} />
-
-            <Text>Enter Phone </Text>
-
-
-
-            <TextInput
-                placeholder="password"
-                returnKeyType="done"
-                textContentType="password"
-                autoCapitalize="none"
-                onChangeText={setPhone}
-                value={Uphone} />
 
 
             <Button title="Sign Up" onPress={goToHome} />

@@ -34,5 +34,16 @@ export default function App() {
         <Tab.Screen name="Sites" component={GeocacheListScreen} />
       </Tab.Navigator>
     </NavigationContainer>
+
+
+  // <NavigationContainer>
+  // <Stack.Navigator initialRouteName="signIn">
+  //   <Stack.Screen name = "signIn" component = {signIn}/>
+  //   <Stack.Screen name = "signUp" component = {signUp}/>
+  //   <Stack.Screen name = "main" component = {main}/>
+  // </Stack.Navigator>
+  // </NavigationContainer>
+
+
   );
 }
