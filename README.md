@@ -47,10 +47,10 @@ water fountain; I searched all the trees but didn’t see anything, etc)
   - [x] Setup firebase console and implement firebase manager and location component
   - [x] Display a list of geocaching sites that are near the fetched location
 
-- [ ] 2. Implement Sign-In and Sign-Up Screens @JavteshSinghBhullar(101348129)
-  - [ ] Create sign-in and sign-up screens
-  - [ ] Authenticate user with firestore
-  - [ ] Implement remember me with async storage
+- [x] 2. Implement Sign-In and Sign-Up Screens @JavteshSinghBhullar(101348129)
+  - [x] Create sign-in and sign-up screens
+  - [x] Authenticate user with firestore
+  - [x] Implement remember me with async storage
 
 - [x] 3. Show Details About a Specific Geocaching Site @MohitSharma(101342267)
   - [x] Create geocaching site detail screen
