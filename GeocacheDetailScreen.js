@@ -5,8 +5,6 @@ import { db } from "./FirebaseManager"
 
 const GeocacheDetailScreen = ({ navigation, route }) => {
 
-    const userId = route.params.data.userId
-
     const COLOR_NEW_STATUS = '#6A6A6A'
     const COLOR_IN_PROGRESS_STATUS = '#4A89F3'
     const COLOR_COMPLETED_STATUS = '#33774D'
@@ -27,6 +25,8 @@ const GeocacheDetailScreen = ({ navigation, route }) => {
     const [note, setNote] = useState("")
 
     const geocacheData = JSON.parse(route.params.data)
+    const userId = geocacheData.userId
+    console.log("User Id: " + userId)
 
     useEffect(() => {
         console.log("Use Effect")

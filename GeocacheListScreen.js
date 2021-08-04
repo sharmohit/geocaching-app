@@ -48,9 +48,9 @@ const GeocacheListScreen = ({ navigation, route }) => {
                                         .then(
                                             (savedDoc) => {
                                                 if (savedDoc.data() != undefined) {
-                                                    temp.push({ id: doc.id, userID: userId, content: doc.data(), distance: distance, status: savedDoc.data().status })
+                                                    temp.push({ id: doc.id, userId: userId, content: doc.data(), distance: distance, status: savedDoc.data().status })
                                                 } else {
-                                                    temp.push({ id: doc.id, userID: userId, content: doc.data(), distance: distance, status: "New" })
+                                                    temp.push({ id: doc.id, userId: userId, content: doc.data(), distance: distance, status: "New" })
                                                 }
                                                 setData(temp)
                                                 setLoading(false)
