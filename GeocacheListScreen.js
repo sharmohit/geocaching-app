@@ -7,7 +7,8 @@ import * as Utils from "./Utilities"
 
 const GeocacheListScreen = ({ navigation, route }) => {
 
-    const userId = "aONkqbAUtimEXaisLtWA"
+    console.log("Route: " + JSON.stringify(route.params))
+    const userId = route.params.userId
 
     const MAX_DISTANCE_KM = 5.0
     const [msg, setMsg] = useState("")
@@ -47,9 +48,9 @@ const GeocacheListScreen = ({ navigation, route }) => {
                                         .then(
                                             (savedDoc) => {
                                                 if (savedDoc.data() != undefined) {
-                                                    temp.push({ id: doc.id, content: doc.data(), distance: distance, status: savedDoc.data().status })
+                                                    temp.push({ id: doc.id, userID: userId, content: doc.data(), distance: distance, status: savedDoc.data().status })
                                                 } else {
-                                                    temp.push({ id: doc.id, content: doc.data(), distance: distance, status: "New" })
+                                                    temp.push({ id: doc.id, userID: userId, content: doc.data(), distance: distance, status: "New" })
                                                 }
                                                 setData(temp)
                                                 setLoading(false)
