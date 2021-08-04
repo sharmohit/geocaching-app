@@ -1,14 +1,15 @@
-import { View, TextInput, Button, Text, SafeAreaView } from 'react-native'
+import React, { useState } from 'react'
+import { View, TextInput, Button, Text, SafeAreaView, StyleSheet } from 'react-native'
 import { db } from "./FirebaseManager"
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { AppStyles } from './AppStyles'
 
 const SignUp = ({ navigation, route }) => {
 
-    const [Uname, setName] = React.useState('')
-    const [Uemail, setEmail] = React.useState('')
-    const [Upassword, setPassword] = React.useState('')
-    const [docID, setdocID] = React.useState('')
+    const [Uname, setName] = useState('')
+    const [Uemail, setEmail] = useState('')
+    const [Upassword, setPassword] = useState('')
+    const [docID, setdocID] = useState('')
 
     const goToHome = () => {
 
@@ -49,8 +50,9 @@ const SignUp = ({ navigation, route }) => {
     }
 
     return (
-        <SafeAreaView>
-            <View style={AppStyles.loginContainer}>
+        <View style={AppStyles.loginContainer}>
+            <SafeAreaView>
+            <View>
                 <Text style={AppStyles.appTitle}>Geocaching App</Text>
                 <TextInput
                     style={AppStyles.outlinedContainer}
@@ -88,7 +90,17 @@ const SignUp = ({ navigation, route }) => {
                 </View>
             </View>
         </SafeAreaView>
+        </View>
     )
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#fff',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+});
 
 export default SignUp
