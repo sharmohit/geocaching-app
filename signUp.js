@@ -2,12 +2,15 @@ import React, { useState } from 'react'
 import { StatusBar } from 'expo-status-bar';
 import { View, TextInput, Button, Text, SafeAreaView, Switch, StyleSheet } from 'react-native'
 import { db } from "./fireManager";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function signUp({ navigation, route }) {
 
     const [Uname, setName] = React.useState('')
     const [Uemail, setEmail] = React.useState('')
     const [Upassword, setPassword] = React.useState('')
+    const [docID, setdocID] = React.useState('')
+    
 
 
     const goToHome = () => {
@@ -26,16 +29,37 @@ function signUp({ navigation, route }) {
         }
         // 2. save it to Firestore
         db.collection("Users").add(user).then().catch()
+        getDocID()
  
     
         console.log("Navigation to main")
-        navigation.navigate("main")
+        navigation.navigate("main", {userEmail: Uemail})
     }
 
     const goToSignIn = () => {
         console.log("Moving Back to SignIn Screen")
         navigation.navigate("signIn")
     }
+
+    const getDocID = () => {
+
+        db.collection('Users')
+        .where('email','==',Uemail)
+        .onSnapshot((querySnapshot) => {
+
+
+            querySnapshot.forEach((doc) => {
+                console.log("------------ Getting Doc ID ------------")       
+
+                // console.log(doc.id, " => " , doc.data())
+                setdocID(doc.id)
+                console.log("The doc Id of user is : " + docID)
+                AsyncStorage.setItem("userID",docID)
+                
+            })
+    })
+
+}
 
     return (
         <View style={styles.container}>

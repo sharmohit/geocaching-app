@@ -9,6 +9,7 @@ function signIn({ navigation, route }) {
 
     const [email, setEmail] = React.useState('')
     const [password, setPassword] = React.useState('')
+    const [docID, setdocID] = React.useState('')
 
     const [isEnabled, setIsEnabled] = useState(false);
     const toggleSwitch = () => setIsEnabled(previousState => !previousState);
@@ -33,12 +34,16 @@ function signIn({ navigation, route }) {
                 console.log("------------ Email Found ------------")       
 
                 // console.log(doc.id, " => " , doc.data())
+                setdocID(doc.id)
+                console.log("The doc Id of user is : " + docID)
+                AsyncStorage.setItem("userID",docID)
+
                 const passFromData = doc.data()
 
                 if ( passFromData.pass == password ) {
                     console.log(" ********* Password Matched ***************")
                     console.log("Navigation to main")
-                    navigation.navigate("main")
+                    navigation.navigate("main",{userEmail: email})
                     rememberMe()
                 }
                 else {

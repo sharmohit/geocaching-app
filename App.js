@@ -36,13 +36,15 @@ export default function App() {
     </NavigationContainer>
 
 
-  // <NavigationContainer>
-  // <Stack.Navigator initialRouteName="signIn">
-  //   <Stack.Screen name = "signIn" component = {signIn}/>
-  //   <Stack.Screen name = "signUp" component = {signUp}/>
-  //   <Stack.Screen name = "main" component = {main}/>
-  // </Stack.Navigator>
-  // </NavigationContainer>
+{/* <NavigationContainer>
+<Stack.Navigator initialRouteName="signIn">
+  <Stack.Screen name = "signIn" component = {signIn}/>
+  <Stack.Screen name = "signUp" component = {signUp}/>
+  <Stack.Screen name = "main" component = {main} initialParams={{userEmail: "test@gmail.com"}} 
+    options = { ({route}) => ({userEmail: route.params.userEmail})}
+/>
+</Stack.Navigator>
+</NavigationContainer> */}
 
 
   );
