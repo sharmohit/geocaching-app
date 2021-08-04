@@ -21,7 +21,7 @@ const GeocacheCreationScreen = ({ navigation, route }) => {
       setLocation({})
     })
     return unsubscribe
-  }, [])
+  }, [navigation])
 
 
   const getCoordinates = () => {

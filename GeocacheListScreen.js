@@ -25,6 +25,7 @@ const GeocacheListScreen = ({ navigation, route }) => {
                     if (result.status === "granted") {
                         return Location.getCurrentPositionAsync({})
                     } else {
+                        setLoading(false)
                         throw new Error("Location permission not granted")
                     }
                 })
@@ -61,6 +62,8 @@ const GeocacheListScreen = ({ navigation, route }) => {
                                                 console.error(error)
                                             }
                                         )
+                                } else {
+                                    setLoading(false)
                                 }
                             })
                         })
@@ -68,7 +71,7 @@ const GeocacheListScreen = ({ navigation, route }) => {
                 .catch((error) => {
                     console.error(error)
                     setLoading(false)
-                    setMsg("Location Access is Required to Show Geocache Near You")
+                    setMsg("Location Access is Required")
                 })
         })
         return unsubscribe
@@ -105,7 +108,7 @@ const GeocacheListScreen = ({ navigation, route }) => {
                             </Pressable>
                         )} />
                 )}
-                <Text style={AppStyles.message}>{msg}</Text>
+                <Text style={[AppStyles.message]}>{msg}</Text>
             </View>
         </SafeAreaView>
     )

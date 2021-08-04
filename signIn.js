@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { StatusBar } from 'expo-status-bar'
 import { View, TextInput, Button, Text, SafeAreaView, Switch, StyleSheet, Alert } from 'react-native'
 import { db } from "./FirebaseManager"
@@ -15,34 +15,52 @@ const SignIn = ({ navigation, route }) => {
     const [isEnabled, setIsEnabled] = useState(false)
     const toggleSwitch = () => setIsEnabled(previousState => !previousState)
 
+    useEffect(() => {
+        AsyncStorage.getItem("email")
+            .then((email) => {
+                console.log("Stored Email:" + email)
+                if (email != "" && email != null) {
+                    setEmail(email)
+                    AsyncStorage.getItem("pass")
+                        .then((pass) => {
+                            console.log("Stored Password:" + pass)
+                            if (pass != "" && pass != null) {
+                                setPassword(pass)
+                                goToHome()
+                            }
+                        })
+                        .catch((error) => {
+                            console.error(error)
+                        })
+                }
+            })
+            .catch((error) => {
+                console.error(error)
+            })
+    }, [])
+
 
     const goToHome = () => {
-
-        let userEmail = email
-        let userPassword = password
-
 
         db.collection('users')
             .where('email', '==', email)
             .onSnapshot((querySnapshot) => {
 
-                if (querySnapshot.size == 0) {
+                if (querySnapshot.size === 0) {
                     console.log("No email found")
                     createAlert("Invalid Email")
                 }
 
                 querySnapshot.forEach((doc) => {
-                    console.log("------------ Email Found ------------")
-
                     setdocID(doc.id)
-                    console.log("The doc Id of user is : " + doc.id)
-                    AsyncStorage.setItem("userID", doc.id)
-
                     const passFromData = doc.data()
 
-                    if (passFromData.password == password) {
+                    if (passFromData.password === password) {
                         navigation.replace("Home", { userId: doc.id })
-                        rememberMe()
+                        if (isEnabled) {
+                            AsyncStorage.setItem("email", email)
+                            AsyncStorage.setItem("pass", password)
+                        }
                     }
                     else {
                         // createAlert("Invalid Password")
@@ -69,29 +87,7 @@ const SignIn = ({ navigation, route }) => {
         )
 
     const goToSignup = () => {
-        console.log("Navigation to SignUp Screen")
         navigation.navigate("Sign Up")
-    }
-
-    const rememberMe = () => {
-
-        if (isEnabled == true) {
-
-            console.log("Remember ME Switch is ON ... Storing the values...")
-
-                .then(
-                    () => {
-                        console.groupCollapsed("Save was successful")
-                        console.log("value stored is : Email : " + email)
-                    }
-                )
-                .catch(
-                    (error) => {
-                        console.log("Error occured when saving a primitive")
-                        console.log("error")
-                    }
-                )
-        }
     }
 
     return (

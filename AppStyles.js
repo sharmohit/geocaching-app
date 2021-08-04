@@ -58,7 +58,8 @@ const AppStyles = StyleSheet.create({
         justifyContent: 'space-evenly',
         color: "#1EA352",
         fontSize: 18,
-        fontWeight: "bold"
+        fontWeight: "bold",
+        margin: 3
     },
     button: {
         borderWidth: 1,

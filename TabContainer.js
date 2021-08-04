@@ -15,7 +15,8 @@ const TabContainer = ({ navigation, route }) => {
 
   const signOutPressed = () => {
     navigation.replace("Sign In")
-    AsyncStorage.setItem("userID", "")
+    AsyncStorage.setItem("email", "")
+    AsyncStorage.setItem("pass", "")
   }
 
   const nav = useNavigation()
