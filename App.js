@@ -3,8 +3,8 @@ import { createStackNavigator } from '@react-navigation/stack'
 import { NavigationContainer } from '@react-navigation/native'
 import TabContainer from './TabContainer'
 import GeocacheDetailScreen from './GeocacheDetailScreen'
-import SignIn from './SignIn';
-import SignUp from './SignUp';
+import SignIn from './SignInScreen';
+import SignUp from './SignUpScreen';
 import GeocacheCreationScreen from "./GeocacheCreationScreen"
 
 const Stack = createStackNavigator()
