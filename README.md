@@ -66,6 +66,6 @@ water fountain; I searched all the trees but didn’t see anything, etc)
   - [x] User can track which geocache sites they have “in progress” or “completed”
   - [x] User can keep notes about a specific geocache site
 
-- [ ] 6. Display the Nearby Geocaching Sites on a Map @JavteshSinghBhullar(101348129)
-  - [ ] Create map screen
-  - [ ] Display the nearby geocaching sites on a map with pins
+- [x] 6. Display the Nearby Geocaching Sites on a Map @JavteshSinghBhullar(101348129)
+  - [x] Create map screen
+  - [x] Display the nearby geocaching sites on a map with pins
