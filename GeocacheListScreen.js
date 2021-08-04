@@ -7,7 +7,6 @@ import * as Utils from "./Utilities"
 
 const GeocacheListScreen = ({ navigation, route }) => {
 
-    console.log("Route: " + JSON.stringify(route.params))
     const userId = route.params.userId
 
     const MAX_DISTANCE_KM = 5.0

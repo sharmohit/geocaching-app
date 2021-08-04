@@ -1,123 +1,96 @@
-import { StatusBar } from 'expo-status-bar';
-import React , {useState, useRef} from 'react';
-import { StyleSheet, Text, View, Button, TextInput, Dimensions } from 'react-native';
+import React, { useState, useRef, useEffect } from 'react'
+import { StyleSheet, View, Dimensions } from 'react-native'
 import { db } from "./FirebaseManager"
-
-import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-
-
 import * as Location from "expo-location"
+import MapView, { Marker } from 'react-native-maps'
+import * as Utils from "./Utilities"
 
-import MapView, { Marker } from 'react-native-maps';
+const GeocacheNearbySiteScreen = ({ navigation, route }) => {
 
-
-function GeocacheNearbySiteScreen(navigation, route) {
-
+  const MAX_DISTANCE_KM = 5.0
   const [currRegion, setCurrRegion] = useState({
-    latitude:45.5163539,
+    latitude: 45.5163539,
     longitude: -73.5775142,
-    latitudeDelta: 0.005,
-    longitudeDelta:0.005
+    latitudeDelta: 0.05,
+    longitudeDelta: 0.05
   })
 
-
-//   const [testArray, setTestArray] = useState(
-//     {
-//     coordinates:{"latitude":45.5163539,"longitude":-73.5775142},
-//     name:"Tims",
-//     description:"This is test Cache"
-//     },
-//     {
-//         coordinates:{"latitude":45.515940,"longitude":-73.577550},
-//         name:"Tims",
-//         description:"This is test Cache"
-//         },
-//     {
-//             coordinates:{"latitude":45.51600,"longitude":-73.577650},
-//             name:"Tims",
-//             description:"This is test Cache"
-//     }
-//   )
-
+  const [currCoord, setCurrCoord] = useState({})
+  const mapRef = useRef(null)
   const [dataArray, setDataArray] = useState([])
 
-  const [currCoord, setCurrCoord] = useState({})
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      Location.requestForegroundPermissionsAsync()
+        .then((result) => {
+          if (result.status === "granted") {
+            return Location.getCurrentPositionAsync({})
+          } else {
+            throw new Error("Location permission not granted")
+          }
+        })
+        .then((location) => {
+          console.log("Loc:" + location.coords.latitude)
+          const coordinates = {
+            latitude: location.coords.latitude,
+            longitude: location.coords.longitude
+          }
 
+          mapRef.current.animateCamera(
+            { center: coordinates }, 2000
+          )
+          setCurrCoord(coordinates)
+          db.collection("geocache").get()
+            .then((querySnapshot) => {
+              let temp = []
+              if (querySnapshot.empty) {
+                setMsg("No Geocaching Sites Available")
+                setLoading(false)
+              }
+              querySnapshot.forEach((doc) => {
+                const distance = Utils.getHaversineDistance(
+                  location.coords.latitude,
+                  location.coords.longitude,
+                  doc.data().coordinates.latitude,
+                  doc.data().coordinates.longitude
+                ).toFixed(1)
+                if (distance <= MAX_DISTANCE_KM) {
+                  temp.push(doc.data())
+                }
+              }
+              )
+              setDataArray(temp)
+            })
+            .catch((error) => {
+              console.error(error)
+            })
+        })
+        .catch((error) => {
+          console.error(error)
+        })
+    })
+    return unsubscribe
 
-  const mapRef = useRef(null)
+  }, [navigation])
 
-
-  const getCoordinatesFromFireStore = () => {
-
-    db.collection("geocache").get().then((querySnapshot) => {
-        let temp = []
-        querySnapshot.forEach((documentFromFirestore) => {
-            temp.push(JSON.stringify(documentFromFirestore.data()))
-            console.log("--------------1st--------------")
-            console.log("Data is : " + temp)
-            setDataArray(temp)
-            console.log("--------------2nd--------------")
-            console.log(dataArray)
-            console.log("---------------3rd------------")
-            setDataArray(Object.values(temp))
-            console.log(dataArray)
-
-            console.log("---------------4th------------")
-
-            console.log("first value is : " + dataArray[0])
-        //   console.log(`${documentFromFirestore.id}, ${JSON.stringify(documentFromFirestore.data())}`)
-
-        });
-      }); 
-  
-  }
-  
 
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Map Screen</Text>
-      
-
       <MapView
-        style={{width:Dimensions.get("window").width, height:500}}
+        style={{ width: Dimensions.get("window").width, height: 500 }}
         initialRegion={currRegion}
         ref={mapRef}
       >
-        <Marker coordinate={{latitude:45.5163539, longitude:-73.5775142}}
-          title="Schwartz's Deli"
-          description="We make a really good sandwich"></Marker>
-        <Marker coordinate={{latitude:45.515940, longitude:-73.577550}}
-          title="Main Street Deli"
-          description="We also make a really good sandwich"></Marker>
-        <Marker coordinate={{latitude:45.51600, longitude:-73.577650}}
-          title="Main Street Deli"
-          description="We also make a really good sandwich"></Marker>
-
-     {
-       dataArray.map( (item, key) => {
-        // return <Marker coordinate= {item.coordinates}
-        //   title= {item.name}
-        //   description={item.description}>
-        //   </Marker>
-          return <Text>{item}</Text>
-       })
-     }
-
+        {
+          dataArray.map((item, key) => {
+            return <Marker coordinate={{ latitude: item.coordinates.latitude, longitude: item.coordinates.longitude }}
+              title={item.name}
+              description={item.description}></Marker>
+          })
+        }
       </MapView>
-    
-
-
-{/* 
-{
-       ["Apple", "Banana", "Orange", "Donut", "Eggplant"].map( (item) => {
-         return <Text>{item}</Text>
-       })
-     } */}
-      
-      <Button onPress={getCoordinatesFromFireStore} title="Fetch Items"/>
     </View>
-  );
+  )
 
 }
 

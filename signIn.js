@@ -17,16 +17,52 @@ const SignIn = ({ navigation, route }) => {
 
     useEffect(() => {
         AsyncStorage.getItem("email")
-            .then((email) => {
-                console.log("Stored Email:" + email)
-                if (email != "" && email != null) {
-                    setEmail(email)
+            .then((storedEmail) => {
+                if (storedEmail != "" && storedEmail != null) {
+                    setEmail(storedEmail)
                     AsyncStorage.getItem("pass")
-                        .then((pass) => {
-                            console.log("Stored Password:" + pass)
-                            if (pass != "" && pass != null) {
-                                setPassword(pass)
-                                goToHome()
+                        .then((storedPass) => {
+                            if (storedPass != "" && storedPass != null) {
+                                setPassword(storedPass)
+                                db.collection('users')
+                                    .where('email', '==', storedEmail)
+                                    .onSnapshot((querySnapshot) => {
+
+                                        if (querySnapshot.size === 0) {
+                                            console.log("No email found")
+                                            createAlert("Invalid Email")
+                                        }
+
+                                        querySnapshot.forEach((doc) => {
+                                            setdocID(doc.id)
+                                            const passFromData = doc.data()
+
+                                            if (passFromData.password === storedPass) {
+                                                if (isEnabled) {
+                                                    AsyncStorage.setItem("email", storedEmail)
+                                                        .then(() => {
+                                                            AsyncStorage.setItem("pass", storedPass)
+                                                                .then(() => {
+                                                                    navigation.replace("Home", { userId: doc.id })
+                                                                })
+                                                                .catch((error) => {
+                                                                    console.error(error)
+                                                                })
+                                                        })
+                                                        .catch((error) => {
+                                                            console.error(error)
+                                                        })
+                                                } else {
+                                                    navigation.replace("Home", { userId: doc.id })
+                                                }
+                                            }
+                                            else {
+                                                // createAlert("Invalid Password")
+                                                console.log("Password NOT matched .... Access Denied")
+                                            }
+                                        })
+
+                                    })
                             }
                         })
                         .catch((error) => {
@@ -56,10 +92,22 @@ const SignIn = ({ navigation, route }) => {
                     const passFromData = doc.data()
 
                     if (passFromData.password === password) {
-                        navigation.replace("Home", { userId: doc.id })
                         if (isEnabled) {
                             AsyncStorage.setItem("email", email)
-                            AsyncStorage.setItem("pass", password)
+                                .then(() => {
+                                    AsyncStorage.setItem("pass", password)
+                                        .then(() => {
+                                            navigation.replace("Home", { userId: doc.id })
+                                        })
+                                        .catch((error) => {
+                                            console.error(error)
+                                        })
+                                })
+                                .catch((error) => {
+                                    console.error(error)
+                                })
+                        } else {
+                            navigation.replace("Home", { userId: doc.id })
                         }
                     }
                     else {

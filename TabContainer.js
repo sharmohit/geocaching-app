@@ -7,10 +7,10 @@ import GeocacheCreationScreen from './GeocacheCreationScreen'
 import { useNavigation } from '@react-navigation/native'
 import { Button } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import GeocacheNearbySiteScreen from './GeocacheNearbySiteScreen'
 
 
 const TabContainer = ({ navigation, route }) => {
-  console.log("TabBar:: " + route.params.userId)
   const Tab = createBottomTabNavigator()
 
   const signOutPressed = () => {
@@ -41,6 +41,9 @@ const TabContainer = ({ navigation, route }) => {
           } else if (route.name === 'Add Site') {
             iconName = focused
               ? 'add' : 'add-outline'
+          } else if (route.name === 'Map') {
+            iconName = focused
+              ? 'map' : 'map-outline'
           }
 
           return <Ionicons name={iconName} size={size} color={color} />
@@ -53,6 +56,7 @@ const TabContainer = ({ navigation, route }) => {
       <Tab.Screen name="Sites" component={GeocacheListScreen} initialParams={route.params} />
       <Tab.Screen name="Add Site" component={GeocacheCreationScreen} initialParams={route.params} />
       <Tab.Screen name="Favorites" component={FavoriteScreen} initialParams={route.params} />
+      <Tab.Screen name="Map" component={GeocacheNearbySiteScreen} initialParams={route.params} />
     </Tab.Navigator>
   )
 }
