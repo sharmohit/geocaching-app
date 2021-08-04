@@ -21,6 +21,11 @@ const AppStyles = StyleSheet.create({
         color: "#FFFFFF",
         fontSize: 17,
         fontWeight: "bold"
+    },
+    bodyText: {
+        color: "#1EA352",
+        fontSize: 15,
+        fontWeight: "bold"
     }
 })
 

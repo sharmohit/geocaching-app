@@ -1,99 +1,235 @@
 import React, { useState, useEffect } from "react"
-import { View, Text, Button, SafeAreaView, StyleSheet, TextInput } from "react-native"
+import { View, Text, Button, SafeAreaView, StyleSheet, TextInput, Keyboard } from "react-native"
 import { AppStyles } from "./AppStyles"
+import { db } from "./FirebaseManager"
 
 const GeocacheDetailScreen = ({ navigation, route }) => {
 
+    const userId = "aONkqbAUtimEXaisLtWA"
+
+    const COLOR_NEW_STATUS = '#6A6A6A'
+    const COLOR_IN_PROGRESS_STATUS = '#4A89F3'
+    const COLOR_COMPLETED_STATUS = '#33774D'
+
+    const STATUS_TYPE_NEW = "New"
+    const STATUS_TYPE_IN_PROGRESS = "In Progress"
+    const STATUS_TYPE_COMPLETED = "Completed"
+
+    const [statusColor, setStatusColor] = useState(COLOR_NEW_STATUS)
+    const [statusType, setStatusType] = useState(STATUS_TYPE_NEW)
+
     const [favStatus, setFavStatus] = useState("Add to Favorite")
-    const [isFav, setIsFav] = useState(false)
+    const [isFav, setFav] = useState(false)
 
-    console.log(route.params)
-    const data = JSON.parse(route.params.data)
+    const [progressStatus, setProgressStatus] = useState("Update to In Progress")
+    const [isCompleted, setCompleted] = useState(false)
 
-    const favoritePressed = () => {
-        setIsFav(!isFav)
-        if (!isFav) {
+    const [note, setNote] = useState("")
+
+    const geocacheData = JSON.parse(route.params.data)
+
+    useEffect(() => {
+        console.log("Use Effect")
+        db.collection("users").doc(userId).collection("saved-geocache").doc(geocacheData.id).get()
+        .then(
+            (doc) => {
+                if (doc.data() != undefined) {
+                    setFav(doc.data().favorite)
+                    setNote(doc.data().note)
+                    updateFavorite(doc.data().favorite)
+                    if (doc.data().status === "Completed") {
+                        updateProgress(true)
+                    } else if (doc.data().status === "In Progress") {
+                        updateProgress(false)
+                    }
+                }
+            }
+        ).catch(
+            (err)=> {
+                console.log(`Error Saving Data`)
+                console.log(err)
+            }
+        )
+    }, [])
+
+    const saveChanges = (content) => {
+        db.collection("users").doc(userId).collection("saved-geocache").doc(geocacheData.id).set(content, {merge: true})
+        .then(
+            ()=>{
+                console.log("Document Saved Successfully")
+            }
+        ).catch(
+            (err)=> {
+                console.log(`Error Saving Data`)
+                console.log(err)
+            }
+        )
+    }
+
+    const updateNotePressed = () => {
+        Keyboard.dismiss()
+        console.log("Note updated to, " + note)
+        saveChanges({note: note})
+    }
+
+    const updateFavorite = (value) => {
+        if (value) {
             setFavStatus("Remove from Favorite")
         } else {
             setFavStatus("Add to Favorite")
         }
     }
 
+    const favoritePressed = () => {
+        saveChanges({favorite: !isFav})
+        updateFavorite(!isFav)
+        setFav(!isFav)
+    }
+
+    const updateProgress = (value) => {
+        let status = ""
+        if (value) {
+            setProgressStatus("Update to In Progress")
+            setStatusColor(COLOR_COMPLETED_STATUS)
+            setStatusType(STATUS_TYPE_COMPLETED)
+            status = STATUS_TYPE_COMPLETED
+        } else {
+            setProgressStatus("Update to Completed")
+            setStatusColor(COLOR_IN_PROGRESS_STATUS)
+            setStatusType(STATUS_TYPE_IN_PROGRESS)
+            status = STATUS_TYPE_IN_PROGRESS
+        }
+        setCompleted(!value)
+        return status
+    }
+
+    const progressPressed = () => {
+
+        let status = updateProgress(isCompleted)
+        saveChanges({status: status})
+    }
+
+    const resetPressed = () => {
+        setFav(false)
+        setCompleted(false)
+        setFavStatus("Add to Favorite")
+        setProgressStatus("Update to In Progress")
+        setStatusColor(COLOR_NEW_STATUS)
+        setStatusType(STATUS_TYPE_NEW)
+        setNote("")
+        db.collection("users").doc(userId).collection("saved-geocache").doc(geocacheData.id).delete()
+        .then(() => {
+            console.log("Changes Reverted")
+        })
+        .catch((error) => {
+            console.error("Error deleting data ", error)
+        })
+    }
+
+    const styles = StyleSheet.create({
+        flexBox: {
+            height: '100%',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+        },
+        titleContainer: {
+            backgroundColor: '#1EA352',
+            alignItems: 'center',
+            borderBottomLeftRadius: 4,
+            borderBottomRightRadius: 4,
+            padding: 15,
+            marginLeft: 5,
+            marginRight: 5,
+            marginBottom: 5
+        },
+        statusContainer: {
+            backgroundColor: statusColor,
+            alignItems: 'center',
+            marginTop: 5,
+            marginLeft: 5,
+            marginRight: 5,
+            marginBottom: 1,
+            padding: 5,
+            borderTopLeftRadius: 4,
+            borderTopRightRadius: 4
+        },
+        statusText: {
+            color: '#FFFFFF',
+            fontSize: 13,
+            fontWeight: 'bold'
+        },
+        noteContainer: {
+            margin: 5
+        },
+        button: {
+            borderWidth: 1,
+            borderRadius: 4,
+            padding: 5,
+            margin: 5,
+        },
+        noteButton: {
+            backgroundColor: '#FDFAEE',
+            borderColor: '#EDD157'
+        },
+        favoriteButton: {
+            backgroundColor: '#EDF3FE',
+            borderColor: '#4A89F3'
+        },
+        progressButton: {
+            backgroundColor: '#E9F6EF',
+            borderColor: '#1EA362'
+        },
+        resetButton: {
+            backgroundColor: '#FCEDEC',
+            borderColor: '#DD4B3E'
+        }
+    })
+
     return (
         <SafeAreaView>
-            <View style={AppStyles.container}>
-                <View style={AppStyles.filledContainer}>
-                    <Text style={AppStyles.titleText}>{data.content.name}</Text>
+            <View style={[AppStyles.container, styles.flexBox]}>
+                <View>
+                    <View style={styles.statusContainer}>
+                        <Text style={styles.statusText}>{statusType}</Text>
+                    </View>
+                    <View style={styles.titleContainer}>
+                        <Text style={AppStyles.titleText}>{geocacheData.content.name}</Text>
+                    </View>
+                    <View style={AppStyles.outlinedContainer}>
+                        <Text style={AppStyles.bodyText}>{geocacheData.content.description}</Text>
+                    </View>
+                    <View style={AppStyles.outlinedContainer}>
+                        <Text style={AppStyles.bodyText}>Latitude: {geocacheData.content.coordinates.latitude}</Text>
+                        <Text style={AppStyles.bodyText}>Longitude: {geocacheData.content.coordinates.longitude}</Text>
+                    </View>
+                    <View style={styles.noteContainer}>
+                        <Text style={AppStyles.bodyText}>Note</Text>
+                        <TextInput style={[AppStyles.outlinedContainer, AppStyles.bodyText]}
+                        placeholder = "Add a note about this geocache site"
+                        autoCorrect = {false}
+                        onChangeText = {setNote}
+                        value = {note}
+                        >
+                        </TextInput>
+                        <View style={[styles.button, styles.noteButton]}>
+                            <Button title="Update Note" onPress={updateNotePressed}/>
+                        </View>
+                    </View>
                 </View>
-                <View style={AppStyles.outlinedContainer}>
-                    <Text style={styles.text}>{data.content.description}</Text>
-                </View>
-                <View style={AppStyles.outlinedContainer}>
-                    <Text style={styles.text}>Latitude: {data.content.coordinates.latitude}</Text>
-                    <Text style={styles.text}>Longitude: {data.content.coordinates.longitude}</Text>
-                </View>
-                <Text style={styles.text}>Note</Text>
-                <TextInput style={AppStyles.outlinedContainer}
-                placeholder = "Add a note about this geocache site"
-                returnKeyType = "done"
-                onChangeText = {console.log("Note Updated")}
-                >
-                </TextInput>
-                <View style={styles.favoriteBtn}>
-                    <Button title={favStatus} onPress={favoritePressed}/>
-                </View>
-                <View style={styles.inProgressBtn}>
-                    <Button title="Update to In Progress"/>
-                </View>
-                <View style={styles.completedBtn}>
-                    <Button title="Update to Completed"/>
-                </View>
-                <View style={styles.resetBtn}>
-                    <Button title="Reset Changes"/>
+                <View>
+                    <View style={[styles.button, styles.favoriteButton]}>
+                        <Button title={favStatus} onPress={favoritePressed}/>
+                    </View>
+                    <View style={[styles.button, styles.progressButton]}>
+                        <Button title={progressStatus} onPress={progressPressed}/>
+                    </View>
+                    <View style={[styles.button, styles.resetButton]}>
+                        <Button title="Revert Changes" onPress={resetPressed}/>
+                    </View>
                 </View>
             </View>
         </SafeAreaView>
     )
 }
-
-const styles = StyleSheet.create({
-    text: {
-        color: "#1EA352",
-        fontSize: 15,
-        fontWeight: 'bold'
-    },
-    favoriteBtn: {
-        backgroundColor: "#EDF3FE",
-        borderColor: "#4A89F3",
-        borderWidth: 1,
-        borderRadius: 4,
-        padding: 5,
-        margin: 5,
-    },
-    inProgressBtn: {
-        backgroundColor: "#FFFCED",
-        borderColor: "#8D8A7A",
-        borderWidth: 1,
-        borderRadius: 4,
-        padding: 5,
-        margin: 5,
-    },
-    completedBtn: {
-        backgroundColor: "#E9F6EF",
-        borderColor: "#1EA362",
-        borderWidth: 1,
-        borderRadius: 4,
-        padding: 5,
-        margin: 5,
-    },
-    resetBtn: {
-        backgroundColor: "#FCEDEC",
-        borderColor: "#DD4B3E",
-        borderWidth: 1,
-        borderRadius: 4,
-        padding: 5,
-        margin: 5,
-    }
-})
 
 export default GeocacheDetailScreen
