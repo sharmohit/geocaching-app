@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { StatusBar } from 'expo-status-bar';
 import { View, TextInput, Button, Text, SafeAreaView, Switch, StyleSheet, Alert } from 'react-native'
-import { db } from "./fireManager"
+import { db } from "./FirebaseManager"
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
@@ -21,7 +21,7 @@ function signIn({ navigation, route }) {
         let userPassword = password
 
 
-        db.collection('Users')
+        db.collection('users')
         .where('email','==',email)
         .onSnapshot((querySnapshot) => {
 

@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { StatusBar } from 'expo-status-bar';
 import { View, TextInput, Button, Text, SafeAreaView, Switch, StyleSheet } from 'react-native'
-import { db } from "./fireManager";
+import { db } from "./FirebaseManager";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function signUp({ navigation, route }) {
@@ -28,7 +28,7 @@ function signUp({ navigation, route }) {
             pass : userPassword,
         }
         // 2. save it to Firestore
-        db.collection("Users").add(user).then().catch()
+        db.collection("users").add(user).then().catch()
         getDocID()
  
     
