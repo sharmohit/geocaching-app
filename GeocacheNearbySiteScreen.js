@@ -83,7 +83,7 @@ const GeocacheNearbySiteScreen = ({ navigation, route }) => {
       >
         {
           dataArray.map((item, key) => {
-            return <Marker coordinate={{ latitude: item.coordinates.latitude, longitude: item.coordinates.longitude }}
+            return <Marker key={key} coordinate={{ latitude: item.coordinates.latitude, longitude: item.coordinates.longitude }}
               title={item.name}
               description={item.description}></Marker>
           })

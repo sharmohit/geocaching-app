@@ -25,28 +25,21 @@ const SignUp = ({ navigation, route }) => {
             email: userEmail,
             password: userPassword,
         }
-        db.collection("users").add(user).then().catch()
-        let docID = getDocID()
-        navigation.replace("Home", { userId: docID })
+        db.collection("users").add(user)
+        .then((doc)=>
+        {
+            setdocID(doc.id)
+            console.log("The doc Id of user is : " + doc.id)
+            navigation.replace("Home", { userId: doc.id})
+            AsyncStorage.setItem("userID", doc.id)
+        })
+        .catch((error) => {
+            console.error(error)
+        })
     }
 
     const goToSignIn = () => {
         navigation.navigate("Sign In")
-    }
-
-    const getDocID = () => {
-
-        db.collection('Users')
-            .where('email', '==', Uemail)
-            .onSnapshot((querySnapshot) => {
-                querySnapshot.forEach((doc) => {
-                    setdocID(doc.id)
-                    console.log("The doc Id of user is : " + docID)
-                    AsyncStorage.setItem("userID", docID)
-                    return docID
-                })
-            })
-
     }
 
     return (
