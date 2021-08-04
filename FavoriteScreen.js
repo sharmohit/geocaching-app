@@ -7,7 +7,7 @@ import * as Utils from "./Utilities"
 
 const FavoriteScreen = ({ navigation, route }) => {
 
-    const userId = "aONkqbAUtimEXaisLtWA"
+    const userId = route.params.userId
 
     const [msg, setMsg] = useState("")
     const [data, setData] = useState([])
@@ -56,9 +56,9 @@ const FavoriteScreen = ({ navigation, route }) => {
                                             .then(
                                                 (savedDoc) => {
                                                     if (savedDoc.data() != undefined) {
-                                                        temp.push({ id: doc.id, content: doc.data(), distance: distance, status: savedDoc.data().status })
+                                                        temp.push({ id: doc.id, userID: userId, content: doc.data(), distance: distance, status: savedDoc.data().status })
                                                     } else {
-                                                        temp.push({ id: doc.id, content: doc.data(), distance: distance, status: "New" })
+                                                        temp.push({ id: doc.id, userID: userId, content: doc.data(), distance: distance, status: "New" })
                                                     }
                                                     setData(temp)
                                                     setLoading(false)

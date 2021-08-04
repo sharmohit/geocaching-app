@@ -1,17 +1,14 @@
-import React, { useState } from 'react'
-import { StatusBar } from 'expo-status-bar';
-import { View, TextInput, Button, Text, SafeAreaView, Switch, StyleSheet } from 'react-native'
-import { db } from "./FirebaseManager";
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { View, TextInput, Button, Text, SafeAreaView } from 'react-native'
+import { db } from "./FirebaseManager"
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { AppStyles } from './AppStyles'
 
-function signUp({ navigation, route }) {
+const SignUp = ({ navigation, route }) => {
 
     const [Uname, setName] = React.useState('')
     const [Uemail, setEmail] = React.useState('')
     const [Upassword, setPassword] = React.useState('')
     const [docID, setdocID] = React.useState('')
-    
-
 
     const goToHome = () => {
 
@@ -19,103 +16,79 @@ function signUp({ navigation, route }) {
         let userEmail = Uemail
         let userPassword = Upassword
 
-        console.log("Value are " + userName + " " + userEmail  + " " + userPassword)
+        console.log("Value are " + userName + " " + userEmail + " " + userPassword)
         console.log(".......................")
 
         const user = {
             name: userName,
             email: userEmail,
-            pass : userPassword,
+            password: userPassword,
         }
-        // 2. save it to Firestore
         db.collection("users").add(user).then().catch()
-        getDocID()
- 
-    
-        console.log("Navigation to main")
-        navigation.navigate("main", {userEmail: Uemail})
+        let docID = getDocID()
+        navigation.replace("Home", { userId: docID })
     }
 
     const goToSignIn = () => {
-        console.log("Moving Back to SignIn Screen")
-        navigation.navigate("signIn")
+        navigation.navigate("Sign In")
     }
 
     const getDocID = () => {
 
         db.collection('Users')
-        .where('email','==',Uemail)
-        .onSnapshot((querySnapshot) => {
-
-
-            querySnapshot.forEach((doc) => {
-                console.log("------------ Getting Doc ID ------------")       
-
-                // console.log(doc.id, " => " , doc.data())
-                setdocID(doc.id)
-                console.log("The doc Id of user is : " + docID)
-                AsyncStorage.setItem("userID",docID)
-                
+            .where('email', '==', Uemail)
+            .onSnapshot((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                    setdocID(doc.id)
+                    console.log("The doc Id of user is : " + docID)
+                    AsyncStorage.setItem("userID", docID)
+                    return docID
+                })
             })
-    })
 
-}
+    }
 
     return (
-        <View style={styles.container}>
-            <Text>Sign Up Screen</Text>
+        <SafeAreaView>
+            <View style={AppStyles.loginContainer}>
+                <Text style={AppStyles.appTitle}>Geocaching App</Text>
+                <TextInput
+                    style={AppStyles.outlinedContainer}
+                    placeholder="Enter Name"
+                    returnKeyType="done"
+                    textContentType='name'
+                    autoCapitalize="none"
+                    onChangeText={setName}
+                    value={Uname} />
+                <TextInput
+                    style={AppStyles.outlinedContainer}
+                    placeholder="Enter Email"
+                    returnKeyType="done"
+                    textContentType="emailAddress"
+                    autoCapitalize="none"
+                    onChangeText={setEmail}
+                    value={Uemail} />
+                <TextInput
+                    style={AppStyles.outlinedContainer}
+                    placeholder="Enter Password"
+                    returnKeyType="done"
+                    textContentType="password"
+                    secureTextEntry={true}
+                    autoCapitalize="none"
+                    onChangeText={setPassword}
+                    value={Upassword} />
 
+                <View style={[AppStyles.button, AppStyles.blueButton, { marginBottom: 20 }]}>
+                    <Button title="Sign Up" onPress={goToHome} />
+                </View>
 
-            <Text>Enter Name </Text>
-
-            <TextInput
-                placeholder="Name"
-                returnKeyType="done"
-                textContentType="emailAddress"
-                autoCapitalize="none"
-                onChangeText={setName}
-                value={Uname} />
-
-
-            <Text>Enter email : </Text>
-
-            <TextInput
-                placeholder="email"
-                returnKeyType="done"
-                textContentType="emailAddress"
-                autoCapitalize="none"
-                onChangeText={setEmail}
-                value={Uemail} />
-
-            <Text>Enter password : </Text>
-
-
-
-            <TextInput
-                placeholder="password"
-                returnKeyType="done" asdf
-                textContentType="password"
-                autoCapitalize="none"
-                onChangeText={setPassword}
-                value={Upassword} />
-
-
-            <Button title="Sign Up" onPress={goToHome} />
-
-
-            <Text> Already have an account ? </Text>
-            <Button title="Sign In" onPress={goToSignIn} />
-        </View>
-    );
+                <Text style={[AppStyles.bodyText, { alignSelf: 'center' }]}> Already have an account ? </Text>
+                <View style={[AppStyles.button, AppStyles.greenButton]}>
+                    <Button title="Sign In" onPress={goToSignIn} />
+                </View>
+            </View>
+        </SafeAreaView>
+    )
 }
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#fff',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-});
-
-export default signUp;
+export default SignUp

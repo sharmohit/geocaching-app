@@ -5,7 +5,7 @@ import { db } from "./FirebaseManager"
 
 const GeocacheDetailScreen = ({ navigation, route }) => {
 
-    const userId = "aONkqbAUtimEXaisLtWA"
+    const userId = route.params.data.userId
 
     const COLOR_NEW_STATUS = '#6A6A6A'
     const COLOR_IN_PROGRESS_STATUS = '#4A89F3'
@@ -188,28 +188,6 @@ const GeocacheDetailScreen = ({ navigation, route }) => {
         },
         noteContainer: {
             margin: 5
-        },
-        button: {
-            borderWidth: 1,
-            borderRadius: 4,
-            padding: 5,
-            margin: 5,
-        },
-        noteButton: {
-            backgroundColor: '#FDFAEE',
-            borderColor: '#EDD157'
-        },
-        favoriteButton: {
-            backgroundColor: '#EDF3FE',
-            borderColor: '#4A89F3'
-        },
-        progressButton: {
-            backgroundColor: '#E9F6EF',
-            borderColor: '#1EA362'
-        },
-        resetButton: {
-            backgroundColor: '#FCEDEC',
-            borderColor: '#DD4B3E'
         }
     })
 
@@ -239,19 +217,19 @@ const GeocacheDetailScreen = ({ navigation, route }) => {
                             value={note}
                         >
                         </TextInput>
-                        <View style={[styles.button, styles.noteButton]}>
+                        <View style={[AppStyles.button, AppStyles.yellowButton]}>
                             <Button title="Update Note" onPress={updateNotePressed} />
                         </View>
                     </View>
                 </View>
                 <View>
-                    <View style={[styles.button, styles.favoriteButton]}>
+                    <View style={[AppStyles.button, AppStyles.blueButton]}>
                         <Button title={favStatus} onPress={favoritePressed} />
                     </View>
-                    <View style={[styles.button, styles.progressButton]}>
+                    <View style={[AppStyles.button, AppStyles.greenButton]}>
                         <Button title={progressStatus} onPress={progressPressed} />
                     </View>
-                    <View style={[styles.button, styles.resetButton]}>
+                    <View style={[AppStyles.button, AppStyles.redButton]}>
                         <Button title="Revert Changes" onPress={resetPressed} />
                     </View>
                 </View>
