@@ -47,24 +47,24 @@ water fountain; I searched all the trees but didn’t see anything, etc)
   - [x] Setup firebase console and implement firebase manager and location component
   - [x] Display a list of geocaching sites that are near the fetched location
 
-- [ ] 2. Implement Sign-In and Sign-Up Screens @JavteshSinghBhullar(101348129)
-  - [ ] Create sign-in and sign-up screens
-  - [ ] Authenticate user with firestore
-  - [ ] Implement remember me with async storage
+- [x] 2. Implement Sign-In and Sign-Up Screens @JavteshSinghBhullar(101348129)
+  - [x] Create sign-in and sign-up screens
+  - [x] Authenticate user with firestore
+  - [x] Implement remember me with async storage
 
-- [ ] 3. Show Details About a Specific Geocaching Site @MohitSharma(101342267)
-  - [ ] Create geocaching site detail screen
-  - [ ] Display the name of the cache, description of the item the person is searching and latitude and longitude
+- [x] 3. Show Details About a Specific Geocaching Site @MohitSharma(101342267)
+  - [x] Create geocaching site detail screen
+  - [x] Display the name of the cache, description of the item the person is searching and latitude and longitude
 
 - [ ] 4. Implement Geocaching Site Creation Screen @JavteshSinghBhullar(101348129)
   - [ ] Create geocaching site creation screen
   - [ ] Input name of the cache, description of the item the person is searching and latitude and longitude
   - [ ] Add geocaching site to firestore
 
-- [ ] 5. Record Keeping Features @MohitSharma(101342267)
-  - [ ] User can mark a specific geocaching site as a “favorite”
-  - [ ] User can track which geocache sites they have “in progress” or “completed”
-  - [ ] User can keep notes about a specific geocache site
+- [x] 5. Record Keeping Features @MohitSharma(101342267)
+  - [x] User can mark a specific geocaching site as a “favorite”
+  - [x] User can track which geocache sites they have “in progress” or “completed”
+  - [x] User can keep notes about a specific geocache site
 
 - [ ] 6. Display the Nearby Geocaching Sites on a Map @JavteshSinghBhullar(101348129)
   - [ ] Create map screen
