@@ -56,10 +56,10 @@ water fountain; I searched all the trees but didn’t see anything, etc)
   - [x] Create geocaching site detail screen
   - [x] Display the name of the cache, description of the item the person is searching and latitude and longitude
 
-- [ ] 4. Implement Geocaching Site Creation Screen @JavteshSinghBhullar(101348129)
-  - [ ] Create geocaching site creation screen
-  - [ ] Input name of the cache, description of the item the person is searching and latitude and longitude
-  - [ ] Add geocaching site to firestore
+- [x] 4. Implement Geocaching Site Creation Screen @JavteshSinghBhullar(101348129)
+  - [x] Create geocaching site creation screen
+  - [x] Input name of the cache, description of the item the person is searching and latitude and longitude
+  - [x] Add geocaching site to firestore
 
 - [x] 5. Record Keeping Features @MohitSharma(101342267)
   - [x] User can mark a specific geocaching site as a “favorite”
