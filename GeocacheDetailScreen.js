@@ -31,45 +31,54 @@ const GeocacheDetailScreen = ({ navigation, route }) => {
     useEffect(() => {
         console.log("Use Effect")
         db.collection("users").doc(userId).collection("saved-geocache").doc(geocacheData.id).get()
-        .then(
-            (doc) => {
-                if (doc.data() != undefined) {
-                    setFav(doc.data().favorite)
-                    setNote(doc.data().note)
-                    updateFavorite(doc.data().favorite)
-                    if (doc.data().status === "Completed") {
-                        updateProgress(true)
-                    } else if (doc.data().status === "In Progress") {
-                        updateProgress(false)
+            .then(
+                (doc) => {
+                    if (doc.data() != undefined) {
+                        setNote(doc.data().note)
+                        if (doc.data().status === "Completed") {
+                            updateProgress(true)
+                        } else if (doc.data().status === "In Progress") {
+                            updateProgress(false)
+                        }
                     }
                 }
-            }
-        ).catch(
-            (err)=> {
-                console.log(`Error Saving Data`)
-                console.log(err)
-            }
-        )
+            ).catch(
+                (error) => {
+                    console.error(error)
+                }
+            )
+        db.collection("users").doc(userId).collection("favorite-geocache").doc(geocacheData.id).get()
+            .then(
+                (doc) => {
+                    if (doc.data() != undefined) {
+                        setFav(true)
+                        updateFavorite(true)
+                    }
+                }
+            ).catch(
+                (error) => {
+                    console.error(error)
+                }
+            )
     }, [])
 
     const saveChanges = (content) => {
-        db.collection("users").doc(userId).collection("saved-geocache").doc(geocacheData.id).set(content, {merge: true})
-        .then(
-            ()=>{
-                console.log("Document Saved Successfully")
-            }
-        ).catch(
-            (err)=> {
-                console.log(`Error Saving Data`)
-                console.log(err)
-            }
-        )
+        db.collection("users").doc(userId).collection("saved-geocache").doc(geocacheData.id).set(content, { merge: true })
+            .then(
+                () => {
+                    console.log("Document Saved Successfully")
+                }
+            ).catch(
+                (error) => {
+                    console.log(error)
+                }
+            )
     }
 
     const updateNotePressed = () => {
         Keyboard.dismiss()
         console.log("Note updated to, " + note)
-        saveChanges({note: note})
+        saveChanges({ note: note })
     }
 
     const updateFavorite = (value) => {
@@ -81,7 +90,26 @@ const GeocacheDetailScreen = ({ navigation, route }) => {
     }
 
     const favoritePressed = () => {
-        saveChanges({favorite: !isFav})
+        if (!isFav) {
+            db.collection("users").doc(userId).collection("favorite-geocache").doc(geocacheData.id).set({ id: geocacheData.id })
+                .then(
+                    () => {
+                        console.log("Document Saved Successfully")
+                    }
+                ).catch(
+                    (error) => {
+                        console.error(error)
+                    }
+                )
+        } else {
+            db.collection("users").doc(userId).collection("favorite-geocache").doc(geocacheData.id).delete()
+                .then(() => {
+                    console.log("Removed Data")
+                })
+                .catch((error) => {
+                    console.error(error)
+                })
+        }
         updateFavorite(!isFav)
         setFav(!isFav)
     }
@@ -106,7 +134,7 @@ const GeocacheDetailScreen = ({ navigation, route }) => {
     const progressPressed = () => {
 
         let status = updateProgress(isCompleted)
-        saveChanges({status: status})
+        saveChanges({ status: status })
     }
 
     const resetPressed = () => {
@@ -118,12 +146,12 @@ const GeocacheDetailScreen = ({ navigation, route }) => {
         setStatusType(STATUS_TYPE_NEW)
         setNote("")
         db.collection("users").doc(userId).collection("saved-geocache").doc(geocacheData.id).delete()
-        .then(() => {
-            console.log("Changes Reverted")
-        })
-        .catch((error) => {
-            console.error("Error deleting data ", error)
-        })
+            .then(() => {
+                console.log("Changes Reverted")
+            })
+            .catch((error) => {
+                console.error(error)
+            })
     }
 
     const styles = StyleSheet.create({
@@ -205,26 +233,26 @@ const GeocacheDetailScreen = ({ navigation, route }) => {
                     <View style={styles.noteContainer}>
                         <Text style={AppStyles.bodyText}>Note</Text>
                         <TextInput style={[AppStyles.outlinedContainer, AppStyles.bodyText]}
-                        placeholder = "Add a note about this geocache site"
-                        autoCorrect = {false}
-                        onChangeText = {setNote}
-                        value = {note}
+                            placeholder="Add a note about this geocache site"
+                            autoCorrect={false}
+                            onChangeText={setNote}
+                            value={note}
                         >
                         </TextInput>
                         <View style={[styles.button, styles.noteButton]}>
-                            <Button title="Update Note" onPress={updateNotePressed}/>
+                            <Button title="Update Note" onPress={updateNotePressed} />
                         </View>
                     </View>
                 </View>
                 <View>
                     <View style={[styles.button, styles.favoriteButton]}>
-                        <Button title={favStatus} onPress={favoritePressed}/>
+                        <Button title={favStatus} onPress={favoritePressed} />
                     </View>
                     <View style={[styles.button, styles.progressButton]}>
-                        <Button title={progressStatus} onPress={progressPressed}/>
+                        <Button title={progressStatus} onPress={progressPressed} />
                     </View>
                     <View style={[styles.button, styles.resetButton]}>
-                        <Button title="Revert Changes" onPress={resetPressed}/>
+                        <Button title="Revert Changes" onPress={resetPressed} />
                     </View>
                 </View>
             </View>
