@@ -39,6 +39,40 @@ item the person is searching for, latitude and longitude)
 water fountain; I searched all the trees but didn’t see anything, etc)
   - User can take a photo of the geocache site (or the item they found)
 
+## Screenshots
+<table style="width:100%">
+  <tr>
+    <th>Sign-In</th>
+    <th>Sign-Up</th>
+    <th>Geocache Sites</th>
+  </tr>
+  <tr>
+    <td><img src = "https://github.com/sharmohit/geocaching-app/blob/main/screenshots/01-geocaching-app-sign-in.png" alt="Sign-In" width="205" height="443"/></td>
+    <td><img src = "https://github.com/sharmohit/geocaching-app/blob/main/screenshots/02-geocaching-app-sign-up.png" alt="Sign-Up" width="205" height="443"/></td>
+    <td><img src = "https://github.com/sharmohit/geocaching-app/blob/main/screenshots/03-geocaching-app-sites.png" alt="Geocache Sites" width="205" height="443"/></td>
+  </tr>
+</table>
+<table style="width:100%">
+  <tr>
+    <th>Geocache Detail</th>
+    <th>Add Geocache</th>
+    <th>Favorites</th>
+  </tr>
+  <tr>
+    <td><img src = "https://github.com/sharmohit/geocaching-app/blob/main/screenshots/04-geocaching-app-detail.png" alt="Geocache Detail" width="205" height="443"/</td>
+    <td><img src = "https://github.com/sharmohit/geocaching-app/blob/main/screenshots/05-geocaching-app-add-site.png" alt="Add Geocache" width="205" height="443"/></td>
+    <td><img src = "https://github.com/sharmohit/geocaching-app/blob/main/screenshots/06-geocaching-app-favorites.png" alt="Favorites" width="205" height="443"/></td>
+  </tr>
+</table>
+<table style="width:100%">
+  <tr>
+    <th>Geocache Map</th>
+  </tr>
+  <tr>
+    <td><img src = "https://github.com/sharmohit/geocaching-app/blob/main/screenshots/07-geocaching-app-map.png" alt="Geocache Map" width="205" height="443"/</td>
+  </tr>
+</table>
+
 ## Task Lists
 - [x] 1. Display a List of Geocaching Sites @MohitSharma(101342267)
   - [x] Setup bottom tab navigation
