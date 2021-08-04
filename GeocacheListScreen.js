@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react"
-import { View, Text, ActivityIndicator, FlatList, Pressable, SafeAreaView, StyleSheet } from "react-native"
+import { View, Text, ActivityIndicator, FlatList, Pressable, SafeAreaView } from "react-native"
 import { db } from "./FirebaseManager"
 import { AppStyles } from "./AppStyles"
 import * as Location from "expo-location"
 import * as Utils from "./Utilities"
 
 const GeocacheListScreen = ({ navigation, route }) => {
+
+    const userId = "aONkqbAUtimEXaisLtWA"
+
     const MAX_DISTANCE_KM = 5.0
     const [msg, setMsg] = useState("")
     const [data, setData] = useState([])
@@ -13,7 +16,9 @@ const GeocacheListScreen = ({ navigation, route }) => {
 
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
-            console.log("focus event")
+            setMsg("")
+            setLoading(true)
+            setData([])
             Location.requestForegroundPermissionsAsync()
                 .then((result) => {
                     if (result.status === "granted") {
@@ -26,23 +31,41 @@ const GeocacheListScreen = ({ navigation, route }) => {
                     db.collection("geocache").get()
                         .then((querySnapshot) => {
                             let temp = []
-                            querySnapshot.forEach((documentFromFirestore) => {
+                            if (querySnapshot.empty) {
+                                setMsg("No Geocaching Sites Available")
+                                setLoading(false)
+                            }
+                            querySnapshot.forEach((doc) => {
                                 const distance = Utils.getHaversineDistance(
                                     location.coords.latitude,
                                     location.coords.longitude,
-                                    documentFromFirestore.data().coordinates.latitude,
-                                    documentFromFirestore.data().coordinates.longitude
+                                    doc.data().coordinates.latitude,
+                                    doc.data().coordinates.longitude
                                 ).toFixed(1)
                                 if (distance <= MAX_DISTANCE_KM) {
-                                    temp.push({ id: documentFromFirestore.id, content: documentFromFirestore.data(), distance: distance })
+                                    db.collection("users").doc(userId).collection("saved-geocache").doc(doc.id).get()
+                                        .then(
+                                            (savedDoc) => {
+                                                if (savedDoc.data() != undefined) {
+                                                    temp.push({ id: doc.id, content: doc.data(), distance: distance, status: savedDoc.data().status })
+                                                } else {
+                                                    temp.push({ id: doc.id, content: doc.data(), distance: distance, status: "New" })
+                                                }
+                                                setData(temp)
+                                                setLoading(false)
+                                            }
+                                        )
+                                        .catch(
+                                            (error) => {
+                                                console.error(error)
+                                            }
+                                        )
                                 }
                             })
-                            setLoading(false)
-                            setData(temp)
                         })
                 })
-                .catch((err) => {
-                    console.error(err)
+                .catch((error) => {
+                    console.error(error)
                     setLoading(false)
                     setMsg("Location Access is Required to Show Geocache Near You")
                 })
@@ -54,10 +77,9 @@ const GeocacheListScreen = ({ navigation, route }) => {
         <SafeAreaView>
             <View style={AppStyles.container}>
                 {isLoading ? (
-                    <ActivityIndicator animating={true} size="large" />
+                    <ActivityIndicator animating={true} size="small" />
                 ) : (
                     <FlatList
-                        style={{ height: "100%" }}
                         data={data}
                         keyExtractor={(item, index) => {
                             return item["id"]
@@ -65,29 +87,27 @@ const GeocacheListScreen = ({ navigation, route }) => {
                         renderItem={({ item }) => (
                             <Pressable
                                 onPress={() => {
-                                    console.log(`${item.id} ${item.content.name} selected`)
                                     navigation.navigate("GeocacheDetailScreen", {
-                                        content: JSON.stringify(item.content),
+                                        data: JSON.stringify(item),
                                     })
                                 }}>
-                                <View style={AppStyles.filledContainer}>
-                                    <Text style={AppStyles.titleText}>{item.content.name}</Text>
-                                    <Text style={styles.distanceText}>{item.distance} Km Away</Text>
+                                <View style={AppStyles.geocacheSiteContainer}>
+                                    <View>
+                                        <Text style={AppStyles.titleText}>{item.content.name}</Text>
+                                        <Text style={AppStyles.distanceText}>{item.distance} Km Away</Text>
+                                    </View>
+                                    <View style={{ alignItems: 'flex-end' }}>
+                                        <Text style={AppStyles.distanceText}>Status</Text>
+                                        <Text style={AppStyles.distanceText}>{item.status}</Text>
+                                    </View>
                                 </View>
                             </Pressable>
                         )} />
                 )}
-                <Text>{msg}</Text>
+                <Text style={AppStyles.message}>{msg}</Text>
             </View>
         </SafeAreaView>
     )
 }
-
-const styles = StyleSheet.create({
-    distanceText: {
-        color: "#FFFFFF",
-        fontSize: 15,
-    }
-})
 
 export default GeocacheListScreen
