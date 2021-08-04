@@ -61,10 +61,10 @@ water fountain; I searched all the trees but didn’t see anything, etc)
   - [ ] Input name of the cache, description of the item the person is searching and latitude and longitude
   - [ ] Add geocaching site to firestore
 
-- [ ] 5. Record Keeping Features @MohitSharma(101342267)
-  - [ ] User can mark a specific geocaching site as a “favorite”
-  - [ ] User can track which geocache sites they have “in progress” or “completed”
-  - [ ] User can keep notes about a specific geocache site
+- [x] 5. Record Keeping Features @MohitSharma(101342267)
+  - [x] User can mark a specific geocaching site as a “favorite”
+  - [x] User can track which geocache sites they have “in progress” or “completed”
+  - [x] User can keep notes about a specific geocache site
 
 - [ ] 6. Display the Nearby Geocaching Sites on a Map @JavteshSinghBhullar(101348129)
   - [ ] Create map screen
